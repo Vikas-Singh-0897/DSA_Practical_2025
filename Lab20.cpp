@@ -22,8 +22,10 @@ void bfsTraversal(Node *root)
     {
         return;
     }
+
     queue<Node *> q;
     q.push(root);
+    
     while (!q.empty())
     {
         Node *current = q.front();
