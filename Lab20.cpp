@@ -1,97 +1,56 @@
 #include <iostream>
+#include <queue>
 using namespace std;
 // Node Structure
 struct Node
 {
     int data;
-    Node *next;
+    Node *left;
+    Node *right;
+
+    Node(int val)
+    {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
 };
-// Graph class
-class Graph
+// BFS Function
+void bfsTraversal(Node *root)
 {
-    int numVertices;
-    Node **adjList;
-
-public:
-    // Constructor
-    Graph(int vertices)
+    if (root == nullptr)
     {
-        numVertices = vertices;
-        adjList = new Node *[vertices];
-
-        for (int i = 0; i < vertices; i++)
+        return;
+    }
+    queue<Node *> q;
+    q.push(root);
+    while (!q.empty())
+    {
+        Node *current = q.front();
+        q.pop();
+        cout << current->data << " ";
+        if (current->left != nullptr)
         {
-            adjList[i] = NULL;
+            q.push(current->left);
+        }
+        if (current->right != nullptr)
+        {
+            q.push(current->right);
         }
     }
-    // Function to add new Edge to Adjency list
-    void addEdge(int src, int dest)
-    {
-        Node *newNode = new Node;
-        newNode->data = dest;
-        newNode->next = adjList[src];
-        adjList[src] = newNode;
-
-        newNode = new Node;
-        newNode->data = src;
-        newNode->next = adjList[dest];
-        adjList[dest] = newNode;
-    }
-
-    // BFS Traversal Function
-    void BFS(int startVertex)
-    {
-        bool *visited = new bool[numVertices];
-        for (int i = 0; i < numVertices; i++)
-        {
-            visited[i] = false;
-        }
-
-        int *queue = new int[numVertices];
-        int front = 0;
-        int rear = 0;
-
-        visited[startVertex] = true;
-        queue[rear++] = startVertex;
-
-        cout << "BFS Traversal: ";
-
-        while (front < rear)
-        {
-            int currentVertex = queue[front++];
-            cout << currentVertex << " ";
-
-            Node *temp = adjList[currentVertex];
-            while (temp != NULL)
-            {
-                int adjNode = temp->data;
-
-                if (!visited[adjNode])
-                {
-                    visited[adjNode] = true;
-                    queue[rear++] = adjNode;
-                }
-                temp = temp->next;
-            }
-        }
-        cout << endl;
-        delete[] visited;
-        delete[] queue;
-    }
-};
+}
 // Main Function
 int main()
 {
-    int vertices = 5;
-    Graph g(vertices);
+    Node *root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
 
-    g.addEdge(0, 1);
-    g.addEdge(0, 2);
-    g.addEdge(1, 3);
-    g.addEdge(1, 4);
-    g.addEdge(2, 4);
-
-    g.BFS(0);
+    cout << "BFS (Level Order) Traversal: ";
+    bfsTraversal(root);
+    cout << endl;
 
     return 0;
 }
